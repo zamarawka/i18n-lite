@@ -85,7 +85,7 @@ class I18n extends EventEmitter<EmittedEvents> {
 
     if (str === null) {
       if (this.debug) {
-        console.warn('i18n: missed key warning ', key);
+        console.warn('i18n-lite: missed key warning ', key);
       }
 
       this.emit('missedKey', {
