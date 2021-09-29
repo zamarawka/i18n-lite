@@ -1,4 +1,4 @@
-import { get } from './utils';
+import { get, interpolate } from './utils';
 import EventEmitter from './EventEmitter';
 
 type Lang = {
@@ -63,32 +63,11 @@ class I18n extends EventEmitter<EmittedEvents> {
   }
 
   interpolate(str: string, params: InterpolationParams) {
-    let result = '';
-    let tmp: RegExpExecArray | null;
-    let lastIndex = 0;
-    const { regexp } = this;
+    const result = interpolate(this.regexp, str, (strArr) => {
+      return get(params, strArr[1].trim(), strArr[0]);
+    });
 
-    while ((tmp = regexp.exec(str)) !== null) {
-      const head = str.slice(lastIndex, tmp.index);
-
-      if (head !== '') {
-        result += head;
-      }
-
-      const intKey = tmp[1].trim();
-
-      result += get(params, intKey, tmp[0]);
-
-      lastIndex = regexp.lastIndex;
-    }
-
-    const tail = str.slice(lastIndex);
-
-    if (tail !== '') {
-      result += tail;
-    }
-
-    return result;
+    return result.join('');
   }
 
   getString(key: string): string | null {

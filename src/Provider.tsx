@@ -8,6 +8,7 @@ import {
   useLayoutEffect,
 } from 'react';
 import I18n from './I18n';
+import { interpolate } from './utils';
 
 export const I18nContext = createContext<{ i18n: I18n; lang: string } | undefined>(undefined);
 
@@ -45,4 +46,38 @@ export default function Provider({ i18n, children }: { i18n: I18n; children: Rea
   }, [i18n]);
 
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;
+}
+
+interface TransProps {
+  t?: I18n['t'];
+  i18nKey: Parameters<I18n['t']>[0];
+  params?: Parameters<I18n['t']>[1];
+  components?: { [key: string]: React.ElementType };
+}
+
+const componentRegExp = /<(?<component>[a-z0-9]+)\/?>(?<content>[^<]+)<\/[a-z0-9]+>/gi;
+
+export function Trans({ t, i18nKey, params, components = {} }: TransProps) {
+  const { t: localT } = useTranslation();
+
+  const str = (t || localT)(i18nKey, params);
+
+  const result = useMemo(
+    () =>
+      Object.keys(components).length === 0
+        ? str
+        : interpolate(componentRegExp, str, (parsed) => {
+            const { component, content } = parsed.groups;
+            const Comp = components[component];
+
+            if (!Comp) {
+              return `<${component}>${content}</${component}>`;
+            }
+
+            return <Comp key={parsed.index}>{content}</Comp>;
+          }),
+    [str, components],
+  );
+
+  return <>{result}</>;
 }

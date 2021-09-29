@@ -26,3 +26,29 @@ export function getLangDetector(i18nKey = 'i18n-lang') {
     },
   };
 }
+
+export function interpolate<T>(regexp: RegExp, str: string, cb: (parsedStr: RegExpExecArray) => T) {
+  const result: Array<string | T> = [];
+  let tmp: RegExpExecArray | null;
+  let lastIndex = 0;
+
+  while ((tmp = regexp.exec(str)) !== null) {
+    const head = str.slice(lastIndex, tmp.index);
+
+    if (head !== '') {
+      result.push(head);
+    }
+
+    result.push(cb(tmp));
+
+    lastIndex = regexp.lastIndex;
+  }
+
+  const tail = str.slice(lastIndex);
+
+  if (tail !== '') {
+    result.push(tail);
+  }
+
+  return result;
+}
