@@ -26,7 +26,7 @@ const { detectLang, langHandler } = getLangDetector();
 
 const en = {
   some: 'some strings {{param}}',
-  richTextString: 'lorem <cpm>ipsum</cpm> <b>{{param}}</b>'
+  richTextString: 'lorem <cpm>ipsum</cpm> <b>{{param}}</b>',
   // ...
 };
 
@@ -64,11 +64,11 @@ export default function SomeComponentWithTranslation() {
     <div>
       <span>{t('some', { param: 'here' })}</span>
       <div>
-        // Way to interpolate components and values
+        {/* Way to interpolate components and values */}
         <Trans
           i18nKey="richTextString"
           components={{
-            cpm: <span />,
+            cpm: (props) => <span {...props} />,
             b: <b />,
           }}
           values={{
