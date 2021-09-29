@@ -1,11 +1,15 @@
 import {
+  isValidElement,
+  cloneElement,
   createContext,
   useState,
   useCallback,
   useContext,
   useMemo,
-  ReactNode,
   useLayoutEffect,
+  ReactNode,
+  ReactElement,
+  ElementType,
 } from 'react';
 import I18n from './I18n';
 import { interpolate } from './utils';
@@ -51,33 +55,43 @@ export default function Provider({ i18n, children }: { i18n: I18n; children: Rea
 interface TransProps {
   t?: I18n['t'];
   i18nKey: Parameters<I18n['t']>[0];
-  params?: Parameters<I18n['t']>[1];
-  components?: { [key: string]: React.ElementType };
+  values?: Parameters<I18n['t']>[1];
+  components?: { [key: string]: ReactElement<any> | ElementType };
 }
 
-const componentRegExp = /<(?<component>[a-z0-9]+)\/?>(?<content>[^<]+)<\/[a-z0-9]+>/gi;
+function getComponentsRE(components: string[]) {
+  const compString = components.join('|');
 
-export function Trans({ t, i18nKey, params, components = {} }: TransProps) {
+  return new RegExp(`<(?<component>(${compString}))\/?>(?<content>[^<]+)<\/(${compString})>`, 'g');
+}
+
+export function Trans({ t, i18nKey, values, components = {} }: TransProps) {
   const { t: localT } = useTranslation();
 
-  const str = (t || localT)(i18nKey, params);
+  const str = (t || localT)(i18nKey, values);
 
-  const result = useMemo(
-    () =>
-      Object.keys(components).length === 0
-        ? str
-        : interpolate(componentRegExp, str, (parsed) => {
-            const { component, content } = parsed.groups;
-            const Comp = components[component];
+  const result = useMemo(() => {
+    const componentsKeys = Object.keys(components);
 
-            if (!Comp) {
-              return `<${component}>${content}</${component}>`;
-            }
+    if (componentsKeys.length === 0) {
+      return str;
+    }
 
-            return <Comp key={parsed.index}>{content}</Comp>;
-          }),
-    [str, components],
-  );
+    return interpolate(getComponentsRE(componentsKeys), str, (parsed) => {
+      const { component, content } = parsed.groups;
+      const Comp = components[component];
+
+      if (!Comp) {
+        return `<${component}>${content}</${component}>`;
+      }
+
+      if (isValidElement(Comp)) {
+        return cloneElement(Comp, { key: parsed.index }, content);
+      } else {
+        return <Comp key={parsed.index}>{content}</Comp>;
+      }
+    });
+  }, [str, components]);
 
   return <>{result}</>;
 }

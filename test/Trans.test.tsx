@@ -61,7 +61,7 @@ describe('Trans', () => {
           <Trans
             i18nKey="body.comp"
             components={{
-              cmp: (props) => <span {...props} />,
+              cmp: <span />,
             }}
           />
         </Provider>,
@@ -71,18 +71,54 @@ describe('Trans', () => {
     expect(container.innerHTML).toBe('Hello <span>someText</span>');
   });
 
-  it('should resolve complex key with params', () => {
+  it('should resolve complex key various component passing', () => {
+    act(() => {
+      render(
+        <Provider i18n={inst}>
+          <Trans
+            i18nKey="body.copWay"
+            components={{
+              cmp: (props) => <span {...props} />,
+              other: <b />,
+            }}
+          />
+        </Provider>,
+        container,
+      );
+    });
+    expect(container.innerHTML).toBe('Hello <span>someText</span> <b>someOther text</b>');
+  });
+
+  it('should resolve complex key new lines', () => {
+    act(() => {
+      render(
+        <Provider i18n={inst}>
+          <Trans
+            i18nKey="body.copWayNl"
+            components={{
+              cmp: <span />,
+              other: <b />,
+            }}
+          />
+        </Provider>,
+        container,
+      );
+    });
+    expect(container.innerHTML).toBe('Hello <span>someText</span>\n<b>someOther text</b>');
+  });
+
+  it('should resolve complex key with values', () => {
     act(() => {
       render(
         <Provider i18n={inst}>
           <Trans
             i18nKey="body.compWithPar"
-            params={{
+            values={{
               param1: 'foo',
               param2: 'bar',
             }}
             components={{
-              cmp: (props) => <span {...props} />,
+              cmp: <span />,
             }}
           />
         </Provider>,
@@ -92,18 +128,18 @@ describe('Trans', () => {
     expect(container.innerHTML).toBe('Hello foo <span>bar</span> <span>someText</span>');
   });
 
-  it('should resolve complex key with params with fallback', () => {
+  it('should resolve complex key with values with fallback', () => {
     act(() => {
       render(
         <Provider i18n={inst}>
           <Trans
             i18nKey="body.compWithParFallback"
-            params={{
+            values={{
               param1: 'foo',
               param2: 'bar',
             }}
             components={{
-              cmp: (props) => <span {...props} />,
+              cmp: <span />,
             }}
           />
         </Provider>,
