@@ -4,7 +4,7 @@
 
 # i18n-lite
 
-Modular, zero dependencies, tiny toolkit for i18n in react based apps.
+Modular, zero dependencies, tiny toolkit for i18n in react based apps. Inspired by i18next api. Focused on reduce bundle size.
 
 Package includes its TypeScript Definitions
 
