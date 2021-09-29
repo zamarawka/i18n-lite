@@ -21,6 +21,6 @@ export default class EventEmitter<
   }
 
   emit<E extends K>(event: E, ...payload: Parameters<T[E]>) {
-    this.callbacks[event].forEach((cb) => cb(...payload));
+    this.callbacks[event]?.forEach((cb) => cb(...payload));
   }
 }
