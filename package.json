@@ -1,6 +1,6 @@
 {
   "name": "i18n-lite",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Tiny react i18n toolkit with i18next like api.",
   "main": "lib",
   "module": "esm",
