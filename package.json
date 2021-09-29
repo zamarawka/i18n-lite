@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "Tiny react i18n toolkit with i18next like api.",
   "main": "lib",
-  "module": "lib/esm",
+  "module": "esm",
   "types": "lib/index.d.ts",
   "scripts": {
     "test": "jest",
@@ -12,7 +12,7 @@
     "type-check": "tsc --noEmit",
     "build:types": "tsc --emitDeclarationOnly",
     "build:cjs": "tsc -m commonjs --declarationDir lib --outDir lib",
-    "build:esm": "tsc -m esNext --declarationDir lib/esm --outDir lib/esm",
+    "build:esm": "tsc -m esNext --declarationDir esm --outDir esm",
     "build": "npm run build:types && npm run build:cjs && npm run build:esm",
     "test:coverage": "jest --coverage",
     "lint": "eslint src test"

@@ -17,6 +17,7 @@
 
 # production
 /lib
+/esm
 /build
 .awspublish*
 
