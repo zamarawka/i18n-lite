@@ -89,6 +89,25 @@ describe('Trans', () => {
     expect(container.innerHTML).toBe('Hello <span>someText</span> <b>someOther text</b>');
   });
 
+  it('should resolve complex key with empty content', () => {
+    act(() => {
+      render(
+        <Provider i18n={inst}>
+          <Trans
+            i18nKey="body.compWithEmpty"
+            components={{
+              cmp: (props) => <span {...props} />,
+              other: <b />,
+              more: <div />,
+            }}
+          />
+        </Provider>,
+        container,
+      );
+    });
+    expect(container.innerHTML).toBe('Hello <span></span> <div></div> <b></b>');
+  });
+
   it('should resolve complex key new lines', () => {
     act(() => {
       render(

@@ -10,6 +10,7 @@ export const en = {
     copWayNl: `Hello <cmp>someText</cmp>
 <other>someOther text</other>`,
     compWithPar: 'Hello {{param1}} <cmp>{{param2}}</cmp> <cmp>someText</cmp>',
+    compWithEmpty: 'Hello <cmp /> <more/> <other></other>',
     compWithParFallback: 'Hello {{param1}} <cmp>{{param2}}</cmp> <some>someText</some>',
     sub: {
       str: 'Some str',
@@ -29,6 +30,7 @@ export const other = {
     copWayNl: `Other Hello <cmp>someText</cmp>
 <other>someOther text</other>`,
     compWithPar: 'Other Hello {{param1}} <cmp>{{param2}}</cmp>',
+    compWithEmpty: 'Other Hello <cmp /> <more/> <other></other>',
     sub: {
       str: 'other Some str',
     },

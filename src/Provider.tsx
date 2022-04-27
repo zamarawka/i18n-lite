@@ -62,7 +62,10 @@ interface TransProps {
 function getComponentsRE(components: string[]) {
   const compString = components.join('|');
 
-  return new RegExp(`<(?<component>(${compString}))\/?>(?<content>[^<]+)<\/(${compString})>`, 'g');
+  return new RegExp(
+    `<(?<component>(${compString}))(\\s*\/>|>(?<content>[^<]+)?<\/(${compString})>)`,
+    'g',
+  );
 }
 
 export function Trans({ t, i18nKey, values, components = {} }: TransProps) {
